@@ -1,17 +1,13 @@
 import { FormatterPage } from "@/components/formatter/FormatterPage";
-import { ApiError } from "@/lib/api/errors";
-import { getPresets, getTypes } from "@/lib/api/formatter";
-import type { FormatType, FormatTypeValue, Preset } from "@/types/formatter";
+import type { FormatType, Preset } from "@/types/formatter";
 
-export const dynamic = "force-dynamic";
-
-interface InitialData {
-  types: FormatType[];
-  type: FormatTypeValue;
-  presets: Preset[];
-  error?: string;
-}
-
+/**
+ * The home route is a Server Component but it does not perform any
+ * server-side fetching. The app ships as a fully static bundle (see
+ * `next.config.ts` -> `output: "export"`) so the initial type/preset
+ * lists are seeded from a hard-coded fallback. The client component
+ * (`FormatterPage`) refreshes them on mount via `apiFetch`.
+ */
 const FALLBACK_TYPES: FormatType[] = [
   { value: "json", label: "JSON" },
   { value: "html", label: "HTML" },
@@ -22,48 +18,12 @@ const FALLBACK_TYPES: FormatType[] = [
 
 const FALLBACK_PRESETS: Preset[] = [{ value: "default", label: "Default" }];
 
-async function loadInitialData(): Promise<InitialData> {
-  try {
-    const types = await getTypes({ cache: "no-store" });
-    if (types.length === 0) {
-      return {
-        types: FALLBACK_TYPES,
-        type: FALLBACK_TYPES[0].value,
-        presets: FALLBACK_PRESETS,
-        error: "Backend returned no format types. Using fallback list.",
-      };
-    }
-
-    const initialType = types[0].value;
-    const presets = await getPresets(initialType, { cache: "no-store" });
-    return {
-      types,
-      type: initialType,
-      presets: presets.length > 0 ? presets : FALLBACK_PRESETS,
-    };
-  } catch (err) {
-    const message =
-      err instanceof ApiError
-        ? `Failed to reach API (${err.code}): ${err.message}`
-        : "Failed to reach API. Check NEXT_PUBLIC_API_BASE_URL and the backend.";
-    return {
-      types: FALLBACK_TYPES,
-      type: FALLBACK_TYPES[0].value,
-      presets: FALLBACK_PRESETS,
-      error: message,
-    };
-  }
-}
-
-export default async function Home() {
-  const { types, type, presets, error } = await loadInitialData();
-
+export default function Home() {
   return (
     <FormatterPage
-      initialTypes={types}
-      initialType={type}
-      initialPresets={presets}
-      initialError={error}
+      initialTypes={FALLBACK_TYPES}
+      initialType={FALLBACK_TYPES[0].value}
+      initialPresets={FALLBACK_PRESETS}
     />
   );
 }

@@ -1,15 +1,20 @@
 import type { NextConfig } from "next";
 
-const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(/\/$/, "");
-
+/**
+ * Tauri requires a fully static frontend bundle. We always emit a static
+ * export so the Tauri WebView can load the app from disk.
+ *
+ * Notes:
+ * - `output: "export"` disables Next.js rewrites at runtime, so the app
+ *   talks to the Laravel backend through absolute URLs (see
+ *   `src/lib/api/client.ts`).
+ * - In Tauri, network calls go through `tauri-plugin-http` to bypass
+ *   browser CORS restrictions.
+ */
 const nextConfig: NextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/v1/:path*",
-        destination: `${apiBase}/api/v1/:path*`,
-      },
-    ];
+  output: "export",
+  images: {
+    unoptimized: true,
   },
 };
 

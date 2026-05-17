@@ -43,3 +43,10 @@ next-env.d.ts
 # agent skills (override global gitignore)
 !.agents/
 !.agents/**
+
+# tauri
+/src-tauri/target/
+/src-tauri/gen/schemas/
+
+# Monaco bundle copied by scripts/copy-monaco.mjs (regenerated on every build)
+/public/monaco-editor/

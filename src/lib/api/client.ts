@@ -4,26 +4,50 @@ import { ApiError } from "./errors";
 interface ApiFetchInit extends Omit<RequestInit, "body"> {
   body?: unknown;
   /**
-   * Override base URL. Useful for server components that must call the
-   * backend directly (rewrites only apply on the client).
+   * Override base URL. Useful for tests or environments where the resolved
+   * default does not apply.
    */
   baseUrl?: string;
+}
+
+type FetchFn = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+
+let cachedFetch: FetchFn | null = null;
+
+/**
+ * Detect whether the page is running inside a Tauri WebView.
+ *
+ * Tauri injects `__TAURI_INTERNALS__` into the global scope when the app
+ * is loaded as a desktop bundle. We use that signal to swap the network
+ * implementation: in Tauri we go through `@tauri-apps/plugin-http` so
+ * requests are issued by the Rust core (no browser CORS), and elsewhere
+ * we use the platform `fetch`.
+ */
+function isTauriRuntime(): boolean {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+}
+
+async function resolveFetch(): Promise<FetchFn> {
+  if (cachedFetch) return cachedFetch;
+  if (isTauriRuntime()) {
+    const mod = await import("@tauri-apps/plugin-http");
+    cachedFetch = mod.fetch as FetchFn;
+  } else {
+    cachedFetch = globalThis.fetch.bind(globalThis);
+  }
+  return cachedFetch;
 }
 
 /**
  * Resolve the base URL used to build request URLs.
  *
- * - On the server we must hit the backend directly because Next.js rewrites
- *   only run for browser-originated requests.
- * - On the client we prefer relative URLs so the browser hits the rewrite
- *   defined in `next.config.ts`.
+ * The app is bundled as a static export (see `next.config.ts`), so
+ * Next.js rewrites are not available at runtime. Both the browser build
+ * and the Tauri build call the backend through an absolute URL.
  */
 function resolveBaseUrl(override?: string): string {
   if (override) return override.replace(/\/$/, "");
-  if (typeof window === "undefined") {
-    return (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(/\/$/, "");
-  }
-  return "";
+  return (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(/\/$/, "");
 }
 
 function getApiKey(): string {
@@ -55,9 +79,11 @@ export async function apiFetch<TResponse>(
     finalHeaders.set("Content-Type", "application/json");
   }
 
+  const fetchFn = await resolveFetch();
+
   let response: Response;
   try {
-    response = await fetch(url, {
+    response = await fetchFn(url, {
       ...rest,
       headers: finalHeaders,
       body: body === undefined ? undefined : JSON.stringify(body),

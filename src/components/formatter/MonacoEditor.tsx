@@ -2,6 +2,9 @@
 
 import dynamic from "next/dynamic";
 import type { EditorTheme } from "@/types/formatter";
+import { ensureMonacoLoader } from "@/lib/monaco-loader";
+
+ensureMonacoLoader();
 
 function EditorSkeleton() {
   return (

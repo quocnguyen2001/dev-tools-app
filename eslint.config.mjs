@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Tauri build artifacts (Rust + bundled minified assets)
+    "src-tauri/target/**",
+    "src-tauri/gen/**",
+    // Local Monaco bundle copied by scripts/copy-monaco.mjs
+    "public/monaco-editor/**",
   ]),
 ]);
 

@@ -6,6 +6,14 @@ Dev Tools is a Next.js 16 (App Router) + React 19 + TypeScript front-end that
 talks to an existing Laravel backend exposing `/api/v1/*`. The UI is a single
 page (the Formatter) for now, but the layout is set up to host more tools.
 
+The same code base ships in two flavours:
+
+- **Web** — `npm run dev` / `npm run build` produce a Next.js app that
+  runs in a browser.
+- **Desktop** — `npm run tauri:build` packages the static export into a
+  native macOS app. See [`06-tauri-overview.md`](./06-tauri-overview.md)
+  for details.
+
 ```
 Browser ──► Next.js (App Router)
                 │
@@ -19,10 +27,11 @@ Browser ──► Next.js (App Router)
 
 ## Why server + client split
 
-- The home route `src/app/page.tsx` is a Server Component. It runs on the
-  server, fetches `getTypes()` and `getPresets(initialType)`, and passes the
-  resolved data to the client orchestrator. That avoids an empty-state flash on
-  first paint and keeps the API key out of the initial HTML.
+- The home route `src/app/page.tsx` is a Server Component, but it does
+  not perform any server-side fetching. The app ships as a static
+  export (so it can be packaged by Tauri), so initial type/preset
+  lists come from a hard-coded fallback. `FormatterPage` refreshes
+  them on mount.
 - The actual editor experience (Monaco, toasts, debounced diff sync) lives in
   `FormatterPage.tsx` which is marked `"use client"`. Monaco does not support
   SSR, so its wrappers (`MonacoEditor.tsx`, `DiffEditor.tsx`) lazy-load via
@@ -66,20 +75,21 @@ src/
     formatter.ts            FormatType, Preset, PrettierOptions, ViewMode, ...
 docs/                       This documentation
 .env.local.example          Required env vars (NEXT_PUBLIC_API_BASE_URL, NEXT_PUBLIC_API_KEY)
-next.config.ts              /api/v1/:path* -> ${NEXT_PUBLIC_API_BASE_URL}/api/v1/:path*
+next.config.ts              `output: "export"` — produces a static bundle in `out/`
+src-tauri/                  Tauri (Rust) crate — see docs 06-11
 ```
 
 ## Data flow
 
-1. The user navigates to `/`. The Server Component fetches types + presets via
-   `apiFetch` using the absolute backend URL (`NEXT_PUBLIC_API_BASE_URL`).
-   Server-side requests do not pass through Next.js rewrites, so a direct URL
-   is required.
-2. The fetched values are passed as props to `FormatterPage` (`"use client"`),
-   which seeds local state and renders the editors.
-3. Client interactions (changing type, hitting Format) call `apiFetch` again,
-   this time with a relative path. The browser hits Next.js, which proxies the
-   request to Laravel via the rewrite defined in `next.config.ts`.
+1. The user opens the app. The Server Component renders immediately with
+   a hard-coded fallback list (no network call at build time).
+2. `FormatterPage` (`"use client"`) mounts and seeds local state from
+   the fallback. A `useEffect` fires `getPresets(type)` to refresh the
+   real list as soon as the API responds.
+3. Client interactions (changing type, hitting Format) call `apiFetch`.
+   The helper detects the runtime: in a browser it uses native
+   `fetch`, inside Tauri it imports `@tauri-apps/plugin-http` and lets
+   the Rust core issue the request (no CORS).
 4. Errors are surfaced through the in-app toast system rather than throwing.
 
 ## Conventions
