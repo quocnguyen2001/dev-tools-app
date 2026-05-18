@@ -17,7 +17,7 @@ import {
 } from "@/hooks/useKeyboardShortcut";
 import { useToast } from "@/hooks/useToast";
 import { ApiError } from "@/lib/api/errors";
-import { formatCode, getPresets } from "@/lib/api/formatter";
+import { formatCode, getPresets, getTypesCached } from "@/lib/api/formatter";
 import {
   DEFAULT_PRETTIER_OPTIONS,
   isPrettierApplicable,
@@ -59,6 +59,7 @@ export function FormatterPage({
 
   const [type, setType] = useState<FormatTypeValue>(initialType);
   const [prevType, setPrevType] = useState<FormatTypeValue>(initialType);
+  const [types, setTypes] = useState<FormatType[]>(initialTypes);
   const [presets, setPresets] = useState<Preset[]>(initialPresets);
   const [preset, setPreset] = useState<string>(initialPresets[0]?.value ?? "default");
 
@@ -91,6 +92,32 @@ export function FormatterPage({
     if (initialError) toast.push(initialError, "error");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialError]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        const fresh = await getTypesCached({ signal: controller.signal });
+        if (cancelled || controller.signal.aborted) return;
+        if (fresh.length === 0) return;
+        setTypes(fresh);
+        setType((current) =>
+          fresh.some((t) => t.value === current) ? current : fresh[0].value,
+        );
+      } catch (err) {
+        if (cancelled || controller.signal.aborted) return;
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        console.warn("Failed to load formatter types", err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -204,7 +231,7 @@ export function FormatterPage({
       <AppHeader />
 
       <FormatterToolbar
-        types={initialTypes}
+        types={types}
         selectedType={type}
         onTypeChange={setType}
         presets={presets}

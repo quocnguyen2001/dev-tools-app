@@ -1,4 +1,10 @@
-export type FormatTypeValue = "json" | "html" | "css" | "javascript" | "sql";
+/**
+ * Identifier for a formatter language. Sourced dynamically from
+ * `GET /api/v1/types`, so this is intentionally an open `string` rather than
+ * a literal union. Lookup tables that key on this type must handle unknown
+ * values gracefully (see `toMonacoLanguage`, `getSampleCode`).
+ */
+export type FormatTypeValue = string;
 
 export interface FormatType {
   value: FormatTypeValue;

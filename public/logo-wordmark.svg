@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 256" role="img" aria-label="Format Hub wordmark">
+  <text
+    x="0" y="174"
+    font-family='system-ui, -apple-system, "Inter", "Segoe UI", Roboto, sans-serif'
+    font-weight="700"
+    font-size="140"
+    letter-spacing="-2.8">
+    <tspan fill="#0f172a">Format</tspan><tspan fill="#7065ec"> Hub</tspan>
+  </text>
+</svg>

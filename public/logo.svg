@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 256" role="img" aria-label="Format Hub">
+  <!-- Mark (256 x 256) -->
+  <g>
+    <rect width="256" height="256" rx="56" ry="56" fill="#7065ec"/>
+    <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+      <path
+        d="M 90 64 C 82 64 76 70 76 80 L 76 116 C 76 124 70 128 62 128 C 70 128 76 132 76 140 L 76 176 C 76 186 82 192 90 192"
+        stroke-width="14"/>
+      <path
+        d="M 166 64 C 174 64 180 70 180 80 L 180 116 C 180 124 186 128 194 128 C 186 128 180 132 180 140 L 180 176 C 180 186 174 192 166 192"
+        stroke-width="14"/>
+      <g stroke-width="10" opacity="0.95">
+        <line x1="105" y1="104" x2="151" y2="104"/>
+        <line x1="98"  y1="128" x2="158" y2="128"/>
+        <line x1="111" y1="152" x2="145" y2="152"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Wordmark: gap = 64 (~25% of mark width). Text baseline tuned for cap-height alignment. -->
+  <text
+    x="320" y="174"
+    font-family='system-ui, -apple-system, "Inter", "Segoe UI", Roboto, sans-serif'
+    font-weight="700"
+    font-size="140"
+    letter-spacing="-2.8">
+    <tspan fill="#0f172a">Format</tspan><tspan fill="#7065ec"> Hub</tspan>
+  </text>
+</svg>
