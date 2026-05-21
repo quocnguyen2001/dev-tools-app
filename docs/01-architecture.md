@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dev Tools is a Next.js 16 (App Router) + React 19 + TypeScript front-end that
+Format Hub is a Next.js 16 (App Router) + React 19 + TypeScript front-end that
 talks to an existing Laravel backend exposing `/api/v1/*`. The UI is a single
 page (the Formatter) for now, but the layout is set up to host more tools.
 

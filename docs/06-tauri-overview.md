@@ -1,6 +1,6 @@
 # Tauri Desktop App — Tổng quan
 
-Tài liệu này mô tả cách Dev Tools được đóng gói thành ứng dụng desktop
+Tài liệu này mô tả cách Format Hub được đóng gói thành ứng dụng desktop
 macOS bằng Tauri v2. Đọc file này trước để hiểu kiến trúc chung, sau
 đó đọc các file 07-11 theo thứ tự.
 
@@ -21,7 +21,7 @@ khởi động nhanh và nhẹ. Backend Rust đảm nhiệm I/O hệ thống và
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Dev Tools.app (macOS)                    │
+│                    Format Hub.app (macOS)                   │
 │                                                             │
 │   ┌────────────────────────┐    ┌────────────────────────┐  │
 │   │   WKWebView (UI)       │    │   Rust core            │  │
@@ -54,7 +54,7 @@ khởi động nhanh và nhẹ. Backend Rust đảm nhiệm I/O hệ thống và
 
 ## 3. Hai mode chạy
 
-Dev Tools chạy được trong cả browser lẫn Tauri từ cùng một code base:
+Format Hub chạy được trong cả browser lẫn Tauri từ cùng một code base:
 
 - **Browser** — `npm run dev`. App chạy trong Chrome/Safari, gọi
   Laravel qua `fetch` thông thường (cần backend bật CORS).
@@ -64,7 +64,7 @@ Dev Tools chạy được trong cả browser lẫn Tauri từ cùng một code b
 
 ## 4. Data flow lúc khởi động
 
-1. `Dev Tools.app` mở → WKWebView load `index.html` từ bundle.
+1. `Format Hub.app` mở → WKWebView load `index.html` từ bundle.
 2. Server Component `src/app/page.tsx` (đã pre-render thành HTML
    tĩnh) render với fallback list types/presets — không gọi API ở
    build-time.

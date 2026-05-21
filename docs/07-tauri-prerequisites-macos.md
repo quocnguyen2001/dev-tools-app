@@ -1,6 +1,6 @@
 # Cài đặt môi trường — macOS Apple Silicon
 
-Hướng dẫn cài tất cả công cụ cần thiết để dev và build Dev Tools
+Hướng dẫn cài tất cả công cụ cần thiết để dev và build Format Hub
 thành ứng dụng desktop macOS trên máy Apple Silicon (M1/M2/M3/M4).
 
 > Mỗi bước đều có lệnh verify. Đảm bảo bước đó pass trước khi qua bước

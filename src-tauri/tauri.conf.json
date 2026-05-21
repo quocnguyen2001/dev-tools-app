@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Dev Tools",
+  "productName": "Format Hub",
   "version": "0.1.0",
-  "identifier": "com.quocnguyen2001.devtools",
+  "identifier": "com.quocnguyen2001.formathub",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Dev Tools",
+        "title": "Format Hub",
         "width": 1280,
         "height": 800,
         "minWidth": 960,

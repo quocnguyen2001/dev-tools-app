@@ -242,7 +242,7 @@ connect-src 'self' ipc: http://ipc.localhost http://localhost:8000 https://api.e
 
 ### App mở 1 giây rồi tắt, không có lỗi gì
 
-Crash silent. Mở Console.app trên macOS → Search "Dev Tools" → đọc
+Crash silent. Mở Console.app trên macOS → Search "Format Hub" → đọc
 crash log. Thường là:
 
 - Missing entitlement (rare khi unsigned).
@@ -251,20 +251,20 @@ crash log. Thường là:
 Hoặc chạy app từ terminal để xem stderr:
 
 ```bash
-"src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app/Contents/MacOS/Dev Tools"
+"src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app/Contents/MacOS/Format Hub"
 ```
 
 ## E. Gatekeeper / signing
 
-### `"Dev Tools" is damaged and can't be opened`
+### `"Format Hub" is damaged and can't be opened`
 
 App bị quarantine attribute do download/transfer. Strip:
 
 ```bash
-xattr -dr com.apple.quarantine "Dev Tools.app"
+xattr -dr com.apple.quarantine "Format Hub.app"
 ```
 
-### `"Dev Tools" cannot be opened because the developer cannot be verified`
+### `"Format Hub" cannot be opened because the developer cannot be verified`
 
 App unsigned, Gatekeeper chặn. Right-click → Open lần đầu, hoặc dùng
 xattr ở trên.
@@ -321,7 +321,7 @@ rm -rf ~/.cargo/registry/cache # giải phóng global cache (sẽ download lại
 Check binary size:
 
 ```bash
-ls -lh "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app/Contents/MacOS/Dev Tools"
+ls -lh "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app/Contents/MacOS/Format Hub"
 ```
 
 Bình thường ~5–10 MB. Nếu lớn hơn nhiều:

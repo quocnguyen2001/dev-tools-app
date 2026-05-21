@@ -138,8 +138,8 @@ Pipeline:
    - Compile Rust với optimization -O3 + LTO
    ↓
 3. bundle assets              (~5–10s)
-   - Tạo Dev Tools.app từ binary + frontend + Info.plist
-   - Tạo Dev Tools_0.1.0_aarch64.dmg với drag-to-Applications
+   - Tạo Format Hub.app từ binary + frontend + Info.plist
+   - Tạo Format Hub_0.1.0_aarch64.dmg với drag-to-Applications
 ```
 
 ### Output artifacts
@@ -147,15 +147,15 @@ Pipeline:
 ```
 src-tauri/target/aarch64-apple-darwin/release/bundle/
 ├── macos/
-│   └── Dev Tools.app                       # raw app bundle, ~10–20 MB
+│   └── Format Hub.app                       # raw app bundle, ~10–20 MB
 └── dmg/
-    └── Dev Tools_0.1.0_aarch64.dmg         # installer DMG, ~10–20 MB
+    └── Format Hub_0.1.0_aarch64.dmg         # installer DMG, ~10–20 MB
 ```
 
 | File | Dùng khi |
 |---|---|
-| `Dev Tools.app` | Test nhanh, copy vào `/Applications`, debug |
-| `Dev Tools_X.Y.Z_aarch64.dmg` | Distribute (gửi cho user khác) |
+| `Format Hub.app` | Test nhanh, copy vào `/Applications`, debug |
+| `Format Hub_X.Y.Z_aarch64.dmg` | Distribute (gửi cho user khác) |
 
 > **Tên file DMG**: `<productName>_<version>_<arch>.dmg`. Đổi
 > `productName` hoặc `version` trong `tauri.conf.json` để đổi tên.
@@ -178,21 +178,21 @@ rustup target add x86_64-apple-darwin
 npm run tauri:build -- --target universal-apple-darwin
 ```
 
-Output: `target/universal-apple-darwin/release/bundle/macos/Dev Tools.app`.
+Output: `target/universal-apple-darwin/release/bundle/macos/Format Hub.app`.
 
 ## 4. Cài và chạy app
 
 ### Option A — chạy trực tiếp `.app`
 
 ```bash
-open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"
+open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app"
 ```
 
 **Lần đầu** macOS chặn vì app unsigned (Gatekeeper). 2 cách bypass:
 
 **Cách 1 — Right-click → Open**
 
-1. Mở Finder, navigate đến `Dev Tools.app`.
+1. Mở Finder, navigate đến `Format Hub.app`.
 2. Right-click → **Open**.
 3. Dialog hiện "macOS cannot verify..." → bấm **Open** (không phải
    button mặc định).
@@ -201,26 +201,26 @@ open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"
 **Cách 2 — Strip quarantine attribute**
 
 ```bash
-xattr -dr com.apple.quarantine "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"
-open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"
+xattr -dr com.apple.quarantine "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app"
+open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app"
 ```
 
 Sau đó double-click bình thường.
 
 ### Option B — cài qua DMG
 
-1. Double-click `Dev Tools_0.1.0_aarch64.dmg`.
-2. Cửa sổ DMG mở ra với icon `Dev Tools.app` và shortcut `Applications`.
-3. Drag `Dev Tools.app` sang `Applications`.
+1. Double-click `Format Hub_0.1.0_aarch64.dmg`.
+2. Cửa sổ DMG mở ra với icon `Format Hub.app` và shortcut `Applications`.
+3. Drag `Format Hub.app` sang `Applications`.
 4. Eject DMG.
-5. Mở từ Spotlight: `⌘+Space` → gõ "Dev Tools" → Enter.
+5. Mở từ Spotlight: `⌘+Space` → gõ "Format Hub" → Enter.
 6. Lần đầu vẫn dính Gatekeeper — apply 1 trong 2 cách trên.
 
 ### Verify app hoạt động đúng
 
 Khi app mở:
 
-1. Window title đọc `Dev Tools`, kích thước 1280×800.
+1. Window title đọc `Format Hub`, kích thước 1280×800.
 2. Formatter hiện ra với type list mặc định: JSON / HTML / CSS /
    JavaScript / SQL.
 3. Sau ~1 giây, list types/presets refresh từ backend (yêu cầu
@@ -301,7 +301,7 @@ npm run build       # smoke test static export
 npm run tauri:build -- --target aarch64-apple-darwin
 
 # 3. Test app trước khi gửi
-open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"
+open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app"
 # (apply Gatekeeper bypass nếu cần)
 
 # 4. Distribute DMG
@@ -325,8 +325,8 @@ Khi release version mới:
 |---|---|
 | Dev với hot reload | `npm run tauri:dev` |
 | Build app cho M-series | `npm run tauri:build -- --target aarch64-apple-darwin` |
-| Mở app vừa build | `open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"` |
-| Bypass Gatekeeper | `xattr -dr com.apple.quarantine "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dev Tools.app"` |
+| Mở app vừa build | `open "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app"` |
+| Bypass Gatekeeper | `xattr -dr com.apple.quarantine "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Format Hub.app"` |
 | Clean rebuild | `cd src-tauri && cargo clean && cd - && rm -rf .next out` |
 
 Khi gặp lỗi → [`11-tauri-troubleshooting.md`](./11-tauri-troubleshooting.md).

@@ -29,9 +29,9 @@ src-tauri/
 ```json
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Dev Tools",
+  "productName": "Format Hub",
   "version": "0.1.0",
-  "identifier": "com.quocnguyen2001.devtools",
+  "identifier": "com.quocnguyen2001.formathub",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -42,7 +42,7 @@ src-tauri/
     "windows": [
       {
         "label": "main",
-        "title": "Dev Tools",
+        "title": "Format Hub",
         "width": 1280,
         "height": 800,
         "minWidth": 960,
@@ -109,7 +109,7 @@ bundle .app + .dmg
 | Trường | Default ở đây | Ghi chú |
 |---|---|---|
 | `label` | `"main"` | ID nội bộ, dùng khi gọi API window |
-| `title` | `"Dev Tools"` | Tiêu đề thanh title bar |
+| `title` | `"Format Hub"` | Tiêu đề thanh title bar |
 | `width` / `height` | 1280×800 | Kích thước mặc định khi mở |
 | `minWidth` / `minHeight` | 960×600 | Giới hạn dưới khi user resize |
 | `resizable` | true | Cho phép kéo cạnh window |
@@ -158,7 +158,7 @@ Targets khả dụng cho macOS:
 
 ```toml
 [package]
-name = "dev-tools-app"
+name = "format-hub"
 version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]
@@ -196,7 +196,7 @@ tauri-plugin-http = "2"
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Default permissions for the Dev Tools desktop app.",
+  "description": "Default permissions for the Format Hub desktop app.",
   "windows": ["main"],
   "permissions": [
     "core:default",

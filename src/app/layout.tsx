@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dev Tools — Formatter",
+  title: "Format Hub — Formatter",
   description: "Format JSON, HTML, CSS, JavaScript and SQL with multiple presets.",
 };
 
